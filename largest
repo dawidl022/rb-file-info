@@ -1,0 +1,28 @@
+#! /usr/bin/env ruby
+
+UNITS = ['B', 'kiB', 'MiB', 'GiB', 'TiB']
+
+def human_size(size_in_bytes, decimal_places = 2)
+  unit = 0
+  size = size_in_bytes
+
+  while size / 1000 > 1 && unit < 4
+    unit += 1
+    size /= 1024.0
+  end
+
+  "#{size.round(decimal_places)}#{UNITS[unit]}"
+end
+
+file_sizes = Dir.glob("*").reduce(Array.new) do |files, file_name|
+  files << {name: file_name, size: File.size(file_name)}
+end
+
+largest10 = file_sizes.sort do |item1, item2|
+  -(item1[:size] <=> item2[:size])
+end [0, 10]
+
+largest10.each do |file|
+  size = human_size(file[:size])
+  puts "#{size.ljust(12)}#{file[:name]}"
+end
