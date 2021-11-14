@@ -9,7 +9,7 @@ scripts are my solutions to exercise found in
 displays the names and sizes of the 10 largest files in the current
 working directory.
 
-## extensions
+### extensions
 
 displays a list of file extensions in the current working directory, along with
 the file count and the sum of their sizes.
