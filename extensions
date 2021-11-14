@@ -1,0 +1,33 @@
+#! /usr/bin/env ruby
+
+# TODO extract into method to reduce redundancy
+file_info = Dir.glob("*").reduce(Array.new) do |files, file_name|
+  files << {
+    name: file_name,
+    size: File.size(file_name),
+    extension: File.extname(file_name)
+  }
+end
+
+files_by_extension =  file_info.group_by { |file| file[:extension] }
+files_by_extension['(no extension)'] = files_by_extension.delete('')
+
+extensions_info = files_by_extension.reduce(Hash.new) do |info, ext_files|
+  extension = ext_files[0]
+  files = ext_files[1]
+
+  info[extension] ||= Hash.new(0)
+  info[extension][:count] += files.count
+  info[extension][:size] += files.reduce(0) do |sum_of_sizes, file|
+    sum_of_sizes += file[:size]
+  end
+
+  info
+end
+
+puts "#{"Extension".ljust(16)} #{"Count".rjust(8)} #{"Total size".rjust(16)}"
+
+extensions_info.each do |extension, info|
+  puts "#{extension.ljust(16)} #{info[:count].to_s.rjust(8)}" \
+    "#{info[:size].to_s.rjust(16)}B"
+end

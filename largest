@@ -14,10 +14,12 @@ def human_size(size_in_bytes, decimal_places = 2)
   "#{size.round(decimal_places)}#{UNITS[unit]}"
 end
 
+# TODO parametrise the glob to search in any dir
 file_sizes = Dir.glob("*").reduce(Array.new) do |files, file_name|
   files << {name: file_name, size: File.size(file_name)}
 end
 
+# TODO parametrise the number of largest items
 largest10 = file_sizes.sort do |item1, item2|
   -(item1[:size] <=> item2[:size])
 end [0, 10]
